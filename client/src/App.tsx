@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 // Public Pages
 import Home from "@/pages/Home";
 import AuthPage from "@/pages/Auth";
+import AdminLoginPage from "@/pages/AdminLogin";
 import AboutMe from "@/pages/AboutMe";
 import BlogList from "@/pages/BlogList";
 import BlogDetail from "@/pages/BlogDetail";
@@ -29,6 +30,7 @@ function Router() {
       {/* Public Routes */}
       <Route path="/" component={Home} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/admin/login" component={AdminLoginPage} />
       <Route path="/about" component={AboutMe} />
       <Route path="/blogs" component={BlogList} />
       <Route path="/blogs/:slug" component={BlogDetail} />

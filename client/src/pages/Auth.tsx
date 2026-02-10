@@ -10,7 +10,7 @@ import { Server } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function AuthPage() {
-  const { login, register, user } = useAuth();
+  const { userLogin, register, user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -19,17 +19,17 @@ export default function AuthPage() {
     return null;
   }
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUserLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     try {
-      await login.mutateAsync({
+      await userLogin.mutateAsync({
         username: formData.get("username") as string,
         password: formData.get("password") as string,
       });
-      toast({ title: "Welcome back!", description: "Successfully logged in." });
+      toast({ title: "Welcome!", description: "Successfully logged in." });
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Error", description: error.message });
+      toast({ variant: "destructive", title: "Login Failed", description: error.message });
     }
   };
 
@@ -69,10 +69,10 @@ export default function AuthPage() {
           <TabsContent value="login">
             <Card>
               <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Enter your credentials to access your account.</CardDescription>
+                <CardTitle>Student Login</CardTitle>
+                <CardDescription>Enter your credentials to access your learning dashboard</CardDescription>
               </CardHeader>
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleUserLogin}>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="username">Username</Label>

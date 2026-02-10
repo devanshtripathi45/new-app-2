@@ -229,16 +229,17 @@ export async function registerRoutes(
 import { hashPassword } from "./auth";
 
 async function seedDatabase() {
-  const users = await storage.getUserByUsername('shivam');
-  if (!users) {
-    const hashedPassword = await hashPassword('shivam123');
+  const adminUser = await storage.getUserByUsername('devansh');
+  if (!adminUser) {
+    const hashedPassword = await hashPassword('devansh123');
     await storage.createUser({
-      username: 'shivam',
+      username: 'devansh',
       password: hashedPassword,
-      fullName: 'Shivam',
+      fullName: 'Devansh Admin',
       role: 'admin',
-      bio: 'Senior Network Engineer & System Administrator'
+      bio: 'Platform Administrator'
     });
+    console.log('✅ Default admin user created: devansh / devansh123');
     
     // Initialize about me data
     await storage.updateAboutMe({
