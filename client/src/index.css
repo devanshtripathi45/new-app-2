@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+
+  /* Cisco-inspired Corporate Blue Palette (Light Mode) */
+  --background: 210 20% 98%;
+  --foreground: 222 47% 11%;
+  
+  --primary: 200 98% 39%; /* Cisco Blue */
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 199 89% 48%; /* Lighter Teal/Blue */
+  --secondary-foreground: 210 40% 98%;
+  
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  
+  --accent: 173 80% 40%; /* Teal Accent */
+  --accent-foreground: 210 40% 98%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 200 98% 39%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Networking Engineer Dark Mode (Professional, High Contrast) */
+  --background: 222 47% 11%; /* Deep Navy */
+  --foreground: 210 40% 98%;
+  
+  --primary: 200 98% 39%; /* Cisco Blue remains anchor */
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 199 89% 48%;
+  --secondary-foreground: 222 47% 11%;
+  
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  
+  --accent: 173 70% 35%;
+  --accent-foreground: 210 40% 98%;
+  
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+  
+  --border: 217 33% 20%;
+  --input: 217 33% 20%;
+  --ring: 200 98% 39%;
+  
+  --card: 222 47% 14%; /* Slightly lighter than bg */
+  --card-foreground: 210 40% 98%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-foreground;
+  }
+}
+
+@layer components {
+  /* Rich Text Editor Styles */
+  .ProseMirror {
+    @apply min-h-[300px] outline-none prose prose-slate dark:prose-invert max-w-none;
+  }
+  
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply text-muted-foreground float-left h-0 pointer-events-none;
+  }
+}

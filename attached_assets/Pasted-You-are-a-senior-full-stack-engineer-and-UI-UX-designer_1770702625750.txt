@@ -1,0 +1,85 @@
+You are a senior full-stack engineer and UI/UX designer.
+
+Build a complete production-ready web application with the following requirements:
+
+TECH STACK:
+- Frontend: React + Tailwind CSS
+- Backend: Node.js + Express
+- Database: MongoDB (with Mongoose)
+- Authentication: JWT based (Sign In / Sign Up)
+- Admin Panel: Separate protected admin dashboard
+- Drag & Drop: Use a rich text editor with drag & drop (like Editor.js / TipTap / Quill)
+- Deployment ready structure
+
+THEME & DESIGN:
+- Overall UI theme inspired by Cisco branding
+- Cisco-style blue tones
+- Clean, professional networking-engineer vibe
+- Dark Mode toggle (user preference saved)
+- Fully responsive (mobile + desktop)
+
+PAGES & FEATURES:
+
+1. HOME PAGE
+- Professional introduction section (About Me)
+- Hero section with my name, role (Cisco Networking Engineer)
+- Show latest 3 blogs
+- Show latest 3 courses
+- Call-to-action buttons
+
+2. BLOG SYSTEM
+- Admin can:
+- Write blogs using drag & drop editor
+- Add images, code blocks, headings
+- Publish / unpublish blogs
+- Users can:
+- View blogs
+- Read full blog pages
+- Blog data stored in database
+
+3. COURSE SYSTEM
+- Admin can:
+- Add courses (title, description, price, image, modules)
+- Update or delete courses
+- Users can:
+- View courses
+- Courses shown on Home page (latest section)
+
+4. AUTHENTICATION
+- Sign Up
+- Sign In
+- Secure password hashing
+- Role based access (Admin / User)
+
+5. ADMIN PANEL
+- Protected admin dashboard
+- Admin can:
+- Change profile photo
+- Update intro text shown on home page
+- Add / edit / delete blogs
+- Add / edit / delete courses
+- Admin panel UI should be clean and professional
+
+6. CONTACT SECTION
+- Contact form (Name, Email, Message)
+- Messages stored in database
+- Admin can view messages in admin panel
+
+7. SOCIAL & EXTERNAL INTEGRATION
+- LinkedIn profile connect button
+- Social links editable from admin panel
+
+8. OTHER REQUIREMENTS
+- Proper folder structure
+- Clean reusable components
+- Environment variables support
+- API routes separated properly
+- Error handling and loading states
+
+OUTPUT EXPECTATION:
+- Generate full project structure
+- Provide all important files
+- Include database schemas
+- Include authentication logic
+- Include admin authorization logic
+- Make code clean, readable and production ready

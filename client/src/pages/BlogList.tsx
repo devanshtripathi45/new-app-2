@@ -1,0 +1,76 @@
+import { Navbar, Footer } from "@/components/Layout";
+import { useBlogs } from "@/hooks/use-blogs";
+import { Link } from "wouter";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, User } from "lucide-react";
+import { format } from "date-fns";
+
+export default function BlogList() {
+  const { data: blogs, isLoading } = useBlogs();
+  
+  // Filter only published blogs for public view
+  const publishedBlogs = blogs?.filter(b => b.isPublished) || [];
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1 container py-12">
+        <div className="max-w-2xl mb-12">
+          <h1 className="text-4xl font-bold font-display tracking-tight mb-4">Engineering Blog</h1>
+          <p className="text-xl text-muted-foreground">
+            Technical guides, troubleshooting stories, and industry analysis.
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="grid md:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map(i => (
+              <Skeleton key={i} className="h-[300px] rounded-xl" />
+            ))}
+          </div>
+        ) : publishedBlogs.length === 0 ? (
+          <div className="text-center py-24 bg-muted/30 rounded-xl">
+            <h3 className="text-xl font-medium">No articles yet</h3>
+            <p className="text-muted-foreground">Check back soon for updates.</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-8">
+            {publishedBlogs.map((blog) => (
+              <Link key={blog.id} href={`/blogs/${blog.slug}`}>
+                <Card className="h-full hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col">
+                  {blog.coverImage && (
+                    <div className="h-48 overflow-hidden bg-muted">
+                      <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                    </div>
+                  )}
+                  <CardHeader>
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {blog.createdAt ? format(new Date(blog.createdAt), 'MMM d, yyyy') : 'Recently'}
+                      </div>
+                      <Badge variant="secondary" className="font-normal">Network</Badge>
+                    </div>
+                    <CardTitle className="text-2xl line-clamp-2">{blog.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                     {/* Strip HTML for preview */}
+                    <p className="text-muted-foreground line-clamp-3">
+                      {blog.content.replace(/<[^>]*>?/gm, '')}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="border-t pt-4">
+                     <span className="text-sm font-medium text-primary">Read Article &rarr;</span>
+                  </CardFooter>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+}
