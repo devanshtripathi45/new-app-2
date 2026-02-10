@@ -2,13 +2,34 @@ import { Navbar, Footer } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useBlogs } from "@/hooks/use-blogs";
 import { useCourses } from "@/hooks/use-courses";
-import { ArrowRight, Server, ShieldCheck, Terminal } from "lucide-react";
+import { ArrowRight, Server, ShieldCheck, Terminal, FileText } from "lucide-react";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { data: blogs, isLoading: blogsLoading } = useBlogs();
   const { data: courses, isLoading: coursesLoading } = useCourses();
+  const [heroTitle, setHeroTitle] = useState("Mastering the Network Infrastructure");
+  const [heroSub, setHeroSub] = useState("Advanced tutorials, configuration guides, and professional courses for the modern network engineer. From BGP to Python automation.");
+
+  // Fetch dynamic hero content
+  useEffect(() => {
+    const fetchHeroContent = async () => {
+      try {
+        const [titleRes, subRes] = await Promise.all([
+          fetch("/api/settings/homeHeroTitle"),
+          fetch("/api/settings/homeHeroSub"),
+        ]);
+        if (titleRes.ok) setHeroTitle(await titleRes.json());
+        if (subRes.ok) setHeroSub(await subRes.json());
+      } catch (error) {
+        console.error("Failed to fetch hero content:", error);
+      }
+    };
+
+    fetchHeroContent();
+  }, []);
 
   // Get latest 3 published
   const latestBlogs = blogs?.filter(b => b.isPublished).slice(0, 3) || [];
@@ -38,10 +59,14 @@ export default function Home() {
               CCIE #12345
             </div>
             <h1 className="text-4xl lg:text-6xl font-display font-extrabold tracking-tight">
-              Mastering the <span className="text-primary">Network</span> Infrastructure
+              {heroTitle.split(/(\w+\s+)/).map((part, idx) => 
+                idx === heroTitle.split(/(\w+\s+)/).length - 1 ? 
+                  <span key={idx} className="text-primary">{part}</span> : 
+                  part
+              )}
             </h1>
             <p className="text-xl text-muted-foreground max-w-[600px]">
-              Advanced tutorials, configuration guides, and professional courses for the modern network engineer. From BGP to Python automation.
+              {heroSub}
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/courses">

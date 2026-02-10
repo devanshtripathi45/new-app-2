@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 // Public Pages
 import Home from "@/pages/Home";
 import AuthPage from "@/pages/Auth";
+import AboutMe from "@/pages/AboutMe";
 import BlogList from "@/pages/BlogList";
 import BlogDetail from "@/pages/BlogDetail";
 import CourseList from "@/pages/CourseList";
@@ -16,6 +17,8 @@ import Contact from "@/pages/Contact";
 
 // Admin Pages
 import AdminDashboard from "@/pages/admin/Dashboard";
+import ManageAboutMe from "@/pages/admin/ManageAboutMe";
+import AdminSettings from "@/pages/admin/Settings";
 import ManageBlogs from "@/pages/admin/ManageBlogs";
 import ManageCourses from "@/pages/admin/ManageCourses";
 import Messages from "@/pages/admin/Messages";
@@ -26,6 +29,7 @@ function Router() {
       {/* Public Routes */}
       <Route path="/" component={Home} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/about" component={AboutMe} />
       <Route path="/blogs" component={BlogList} />
       <Route path="/blogs/:slug" component={BlogDetail} />
       <Route path="/courses" component={CourseList} />
@@ -34,6 +38,8 @@ function Router() {
 
       {/* Admin Routes - Protected (Auth check inside components) */}
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/about-me" component={ManageAboutMe} />
+      <Route path="/admin/settings" component={AdminSettings} />
       <Route path="/admin/blogs" component={ManageBlogs} />
       <Route path="/admin/courses" component={ManageCourses} />
       <Route path="/admin/messages" component={Messages} />

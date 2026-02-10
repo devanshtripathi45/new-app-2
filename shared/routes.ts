@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertUserSchema, insertBlogSchema, insertCourseSchema, insertMessageSchema, users, blogs, courses, messages } from './schema';
+import { insertUserSchema, insertBlogSchema, insertCourseSchema, insertMessageSchema, insertAboutMeSchema, users, blogs, courses, messages, aboutMe } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -160,6 +160,50 @@ export const api = {
       path: '/api/admin/messages' as const,
       responses: {
         200: z.array(z.custom<typeof messages.$inferSelect>()),
+        401: errorSchemas.unauthorized,
+      },
+    },
+  },
+  settings: {
+    get: {
+      method: 'GET' as const,
+      path: '/api/settings/:key' as const,
+      responses: {
+        200: z.custom<typeof z.any>(),
+        404: errorSchemas.notFound,
+      },
+    },
+    getAll: {
+      method: 'GET' as const,
+      path: '/api/settings' as const,
+      responses: {
+        200: z.array(z.custom<typeof z.any>()),
+      },
+    },
+    update: {
+      method: 'PATCH' as const,
+      path: '/api/settings/:key' as const,
+      input: z.object({ value: z.any() }),
+      responses: {
+        200: z.custom<typeof z.any>(),
+        401: errorSchemas.unauthorized,
+      },
+    },
+  },
+  aboutMe: {
+    get: {
+      method: 'GET' as const,
+      path: '/api/about-me' as const,
+      responses: {
+        200: z.custom<typeof aboutMe.$inferSelect>(),
+      },
+    },
+    update: {
+      method: 'PATCH' as const,
+      path: '/api/about-me' as const,
+      input: insertAboutMeSchema.partial(),
+      responses: {
+        200: z.custom<typeof aboutMe.$inferSelect>(),
         401: errorSchemas.unauthorized,
       },
     },

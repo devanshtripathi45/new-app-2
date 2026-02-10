@@ -46,12 +46,21 @@ export const settings = pgTable("settings", {
   value: jsonb("value").notNull(),
 });
 
+export const aboutMe = pgTable("about_me", {
+  id: serial("id").primaryKey(),
+  bio: text("bio").notNull().default(""),
+  profilePhoto: text("profile_photo"),
+  sections: jsonb("sections").$type<{ id: string; title: string; content: string; type: 'text' | 'skills' | 'experience' | 'certifications'; }[]>().default([]),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertBlogSchema = createInsertSchema(blogs).omit({ id: true, createdAt: true });
 export const insertCourseSchema = createInsertSchema(courses).omit({ id: true, createdAt: true });
 export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true });
 export const insertSettingSchema = createInsertSchema(settings).omit({ id: true });
+export const insertAboutMeSchema = createInsertSchema(aboutMe).omit({ id: true, updatedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -64,6 +73,8 @@ export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
+export type AboutMe = typeof aboutMe.$inferSelect;
+export type InsertAboutMe = z.infer<typeof insertAboutMeSchema>;
 
 export interface AboutMeSection {
   id: string;

@@ -153,6 +153,73 @@ export async function registerRoutes(
     }
   });
 
+  // === Settings ===
+  app.get(api.settings.get.path, async (req, res) => {
+    try {
+      const setting = await storage.getSetting(req.params.key);
+      if (!setting) {
+        return res.status(404).json({ message: 'Setting not found' });
+      }
+      res.json(setting.value);
+    } catch (err) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get(api.settings.getAll.path, async (req, res) => {
+    try {
+      const settings = await storage.getAllSettings();
+      const result = settings.reduce((acc, s) => {
+        acc[s.key] = s.value;
+        return acc;
+      }, {} as Record<string, any>);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.patch(api.settings.update.path, async (req, res) => {
+    if (!req.isAuthenticated() || req.user?.role !== 'admin') {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    try {
+      const setting = await storage.setSetting(req.params.key, req.body.value);
+      res.json(setting.value);
+    } catch (err) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // === About Me ===
+  app.get(api.aboutMe.get.path, async (req, res) => {
+    try {
+      const aboutMeData = await storage.getAboutMe();
+      if (!aboutMeData) {
+        return res.json({ bio: "", profilePhoto: null, sections: [] });
+      }
+      res.json(aboutMeData);
+    } catch (err) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.patch(api.aboutMe.update.path, async (req, res) => {
+    if (!req.isAuthenticated() || req.user?.role !== 'admin') {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    try {
+      const input = api.aboutMe.update.input.parse(req.body);
+      const aboutMeData = await storage.updateAboutMe(input);
+      res.json(aboutMeData);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Seed data
   await seedDatabase();
 
@@ -171,6 +238,42 @@ async function seedDatabase() {
       fullName: 'Network Admin',
       role: 'admin',
       bio: 'Senior Network Engineer & System Administrator'
+    });
+    
+    // Initialize about me data
+    await storage.updateAboutMe({
+      bio: "Experienced network engineer with over 10 years of expertise in enterprise network infrastructure, security, and automation. CCNA certified with proven track record in designing and implementing large-scale network solutions.",
+      sections: [
+        {
+          id: "skills",
+          title: "Core Skills & Expertise",
+          type: "skills",
+          content: "• Network Design & Architecture\n• Cisco IOS/IOS-XE Configuration\n• BGP & OSPF Routing Protocols\n• Network Security & Firewalls\n• Python Network Automation\n• Cloud Networking (AWS, Azure)\n• Network Monitoring & Analytics"
+        },
+        {
+          id: "experience",
+          title: "Professional Experience",
+          type: "experience",
+          content: "Senior Network Engineer at TechCorp (2020-Present)\nDesigned and implemented network infrastructure for 50+ multi-site locations. Led network modernization initiative reducing latency by 40%.\n\nNetwork Engineer at NetSolutions (2017-2020)\nManaged core and edge network infrastructure supporting 1000+ users. Implemented automated network provisioning reducing deployment time by 60%."
+        },
+        {
+          id: "certifications",
+          title: "Certifications & Credentials",
+          type: "certifications",
+          content: "• Cisco Certified Network Associate (CCNA) - 2022\n• Cisco Certified Network Professional (CCNP) - In Progress\n• AWS Certified Cloud Practitioner - 2023\n• Udacity Network Engineer Nanodegree - 2021"
+        }
+      ]
+    });
+
+    // Initialize site settings
+    await storage.setSetting('siteName', 'NetEngPro');
+    await storage.setSetting('logoUrl', null);
+    await storage.setSetting('homeHeroTitle', 'Mastering the Network Infrastructure');
+    await storage.setSetting('homeHeroSub', 'Advanced tutorials, configuration guides, and professional courses for the modern network engineer. From BGP to Python automation.');
+    await storage.setSetting('socialLinks', {
+      linkedin: '',
+      twitter: '',
+      github: ''
     });
     
     const existingBlogs = await storage.getBlogs();

@@ -1,10 +1,12 @@
 import { db } from "./db";
 import {
-  users, blogs, courses, messages,
+  users, blogs, courses, messages, settings, aboutMe,
   type User, type InsertUser,
   type Blog, type InsertBlog,
   type Course, type InsertCourse,
-  type Message, type InsertMessage
+  type Message, type InsertMessage,
+  type Setting, type InsertSetting,
+  type AboutMe, type InsertAboutMe
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -33,6 +35,15 @@ export interface IStorage {
   // Messages
   createMessage(message: InsertMessage): Promise<Message>;
   getMessages(): Promise<Message[]>;
+
+  // Settings
+  getSetting(key: string): Promise<Setting | undefined>;
+  setSetting(key: string, value: any): Promise<Setting>;
+  getAllSettings(): Promise<Setting[]>;
+
+  // About Me
+  getAboutMe(): Promise<AboutMe | undefined>;
+  updateAboutMe(updates: Partial<InsertAboutMe>): Promise<AboutMe>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -118,6 +129,42 @@ export class DatabaseStorage implements IStorage {
 
   async getMessages(): Promise<Message[]> {
     return await db.select().from(messages).orderBy(desc(messages.createdAt));
+  }
+
+  // Settings
+  async getSetting(key: string): Promise<Setting | undefined> {
+    const [setting] = await db.select().from(settings).where(eq(settings.key, key));
+    return setting;
+  }
+
+  async setSetting(key: string, value: any): Promise<Setting> {
+    const existing = await this.getSetting(key);
+    if (existing) {
+      const [updated] = await db.update(settings).set({ value }).where(eq(settings.key, key)).returning();
+      return updated;
+    }
+    const [created] = await db.insert(settings).values({ key, value }).returning();
+    return created;
+  }
+
+  async getAllSettings(): Promise<Setting[]> {
+    return await db.select().from(settings);
+  }
+
+  // About Me
+  async getAboutMe(): Promise<AboutMe | undefined> {
+    const [aboutMeData] = await db.select().from(aboutMe);
+    return aboutMeData;
+  }
+
+  async updateAboutMe(updates: Partial<InsertAboutMe>): Promise<AboutMe> {
+    const existing = await this.getAboutMe();
+    if (existing) {
+      const [updated] = await db.update(aboutMe).set(updates).where(eq(aboutMe.id, existing.id)).returning();
+      return updated;
+    }
+    const [created] = await db.insert(aboutMe).values({ ...updates, bio: updates.bio || "", sections: updates.sections || [] }).returning();
+    return created;
   }
 }
 
