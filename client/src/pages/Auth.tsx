@@ -41,10 +41,9 @@ export default function AuthPage() {
         username: formData.get("username") as string,
         password: formData.get("password") as string,
         fullName: formData.get("fullName") as string,
-        otp: formData.get("otp") as string,
-        role: "user" // Default role
+        role: "user"
       });
-      toast({ title: "Account created!", description: "Please log in with your new account." });
+      toast({ title: "Account created!", description: "You are now logged in." });
     } catch (error: any) {
       toast({ variant: "destructive", title: "Error", description: error.message });
     }
@@ -57,8 +56,8 @@ export default function AuthPage() {
           <div className="p-3 bg-primary/10 rounded-full">
             <Server className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold font-display">Welcome to NetEngPro</h1>
-          <p className="text-sm text-muted-foreground text-center">Your gateway to network mastery</p>
+          <h1 className="text-2xl font-bold font-display">Welcome to LearnWithShivam</h1>
+          <p className="text-sm text-muted-foreground text-center">Learn networking and system administration</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
@@ -97,7 +96,7 @@ export default function AuthPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Create Account</CardTitle>
-                <CardDescription>Join our community of network engineers.</CardDescription>
+                <CardDescription>Join LearnWithShivam and start learning today.</CardDescription>
               </CardHeader>
               <form onSubmit={handleRegister}>
                 <CardContent className="space-y-4">
@@ -112,10 +111,6 @@ export default function AuthPage() {
                   <div className="space-y-2">
                     <Label htmlFor="reg-password">Password</Label>
                     <Input id="reg-password" name="password" type="password" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-otp">OTP</Label>
-                    <Input id="reg-otp" name="otp" required placeholder="Enter OTP (e.g. 123456)" />
                   </div>
                 </CardContent>
                 <CardFooter>

@@ -30,7 +30,7 @@ export default function AdminSettings() {
   const { toast } = useToast();
 
   const [settings, setSettings] = useState<SiteSettings>({
-    siteName: "NetEngPro",
+    siteName: "LearnWithShivam",
     homeHeroTitle: "Mastering the Network Infrastructure",
     homeHeroSub: "Advanced tutorials, configuration guides, and professional courses for the modern network engineer.",
     logoUrl: "",
@@ -205,7 +205,7 @@ export default function AdminSettings() {
                   id="siteName"
                   value={settings.siteName}
                   onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
-                  placeholder="NetEngPro"
+                  placeholder="LearnWithShivam"
                   disabled={loading}
                 />
               </div>

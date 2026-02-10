@@ -76,31 +76,46 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      const { username, password, fullName, otp } = req.body;
-      if (!username || !password || !fullName || !otp) {
-        return res.status(400).json({ message: "All fields including OTP are required" });
+      const { username, password, fullName } = req.body;
+      
+      // Validate required fields
+      if (!username || !password || !fullName) {
+        return res.status(400).json({ message: "Username, password, and full name are required" });
       }
-      // For demo: OTP must be '123456'. In production, implement real OTP logic.
-      if (otp !== '123456') {
-        return res.status(400).json({ message: "Invalid OTP" });
+      
+      // Validate input lengths
+      if (username.length < 3) {
+        return res.status(400).json({ message: "Username must be at least 3 characters" });
       }
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters" });
+      }
+      
+      // Check if user already exists
       const existingUser = await storage.getUserByUsername(username);
       if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
+        return res.status(400).json({ message: "Username already exists. Please choose a different username." });
       }
+      
+      // Hash password and create user
       const hashedPassword = await hashPassword(password);
       const user = await storage.createUser({
         username,
         password: hashedPassword,
         fullName,
-        role: 'user',
+        role: "user",
       });
+      
+      // Log user in after registration
       req.login(user, (err) => {
-        if (err) return next(err);
-        res.status(201).json(user);
+        if (err) {
+          return res.status(500).json({ message: "Registration successful but login failed" });
+        }
+        return res.status(201).json({ message: "Account created successfully", user });
       });
-    } catch (err) {
-      res.status(500).json({ message: "Registration failed", error: err?.message || err });
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      return res.status(500).json({ message: "Registration failed. Please try again later.", error: err?.message });
     }
   });
 
@@ -123,8 +138,10 @@ export function setupAuth(app: Express) {
 
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
-      if (err) return next(err);
-      res.sendStatus(200);
+      if (err) {
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      return res.status(200).json({ message: "Logged out successfully" });
     });
   });
 

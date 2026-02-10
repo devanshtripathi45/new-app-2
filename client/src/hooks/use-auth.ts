@@ -26,14 +26,12 @@ export function useAuth() {
         credentials: "include",
       });
       
+      const data = await res.json();
       if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Invalid username or password");
-        }
-        throw new Error("Login failed");
+        throw new Error(data.message || "Login failed");
       }
       
-      return api.auth.login.responses[200].parse(await res.json());
+      return data.user || data;
     },
     onSuccess: (user) => {
       queryClient.setQueryData([api.auth.me.path], user);
@@ -55,19 +53,21 @@ export function useAuth() {
         credentials: "include",
       });
       
+      const response = await res.json();
       if (!res.ok) {
-        if (res.status === 400) {
-          const error = api.auth.register.responses[400].parse(await res.json());
-          throw new Error(error.message);
-        }
-        throw new Error("Registration failed");
+        throw new Error(response.message || "Registration failed");
       }
       
-      return api.auth.register.responses[201].parse(await res.json());
+      return response.user || response;
     },
-    onSuccess: () => {
-      // Auto login or redirect to login
-      setLocation("/auth");
+    onSuccess: (user) => {
+      queryClient.setQueryData([api.auth.me.path], user);
+      // Auto-redirect after registration
+      if (user.role === "admin") {
+        setLocation("/admin");
+      } else {
+        setLocation("/");
+      }
     },
   });
 

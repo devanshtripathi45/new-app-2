@@ -266,10 +266,10 @@ async function seedDatabase() {
     });
 
     // Initialize site settings
-    await storage.setSetting('siteName', 'NetEngPro');
+    await storage.setSetting('siteName', 'LearnWithShivam');
     await storage.setSetting('logoUrl', null);
-    await storage.setSetting('homeHeroTitle', 'Mastering the Network Infrastructure');
-    await storage.setSetting('homeHeroSub', 'Advanced tutorials, configuration guides, and professional courses for the modern network engineer. From BGP to Python automation.');
+    await storage.setSetting('homeHeroTitle', 'Learn Networking & System Administration');
+    await storage.setSetting('homeHeroSub', 'Complete tutorials, guides, and courses to master networking, Linux, and cloud infrastructure. Learn from Shivam.');
     await storage.setSetting('socialLinks', {
       linkedin: '',
       twitter: '',

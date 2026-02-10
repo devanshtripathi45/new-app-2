@@ -105,7 +105,7 @@ export default function CourseDetail() {
              <div className="flex items-center gap-3">
                <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center font-bold text-primary">NP</div>
                <div>
-                 <p className="font-semibold">NetEngPro Team</p>
+                 <p className="font-semibold">LearnWithShivam Team</p>
                  <p className="text-xs text-muted-foreground">Senior Network Architects</p>
                </div>
              </div>

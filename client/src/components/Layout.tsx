@@ -13,7 +13,7 @@ export function Navbar() {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [logo, setLogo] = useState<string | null>(null);
-  const [siteName, setSiteName] = useState("NetEngPro");
+  const [siteName, setSiteName] = useState("LearnWithShivam");
 
   useEffect(() => {
     const fetchBranding = async () => {
@@ -132,7 +132,7 @@ export function Navbar() {
 
 export function Footer() {
   const [logo, setLogo] = useState<string | null>(null);
-  const [siteName, setSiteName] = useState("NetEngPro");
+  const [siteName, setSiteName] = useState("LearnWithShivam");
   const [social, setSocial] = useState<any>({});
 
   useEffect(() => {
