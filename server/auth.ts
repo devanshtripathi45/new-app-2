@@ -76,23 +76,31 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      const existingUser = await storage.getUserByUsername(req.body.username);
+      const { username, password, fullName, otp } = req.body;
+      if (!username || !password || !fullName || !otp) {
+        return res.status(400).json({ message: "All fields including OTP are required" });
+      }
+      // For demo: OTP must be '123456'. In production, implement real OTP logic.
+      if (otp !== '123456') {
+        return res.status(400).json({ message: "Invalid OTP" });
+      }
+      const existingUser = await storage.getUserByUsername(username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
-
-      const hashedPassword = await hashPassword(req.body.password);
+      const hashedPassword = await hashPassword(password);
       const user = await storage.createUser({
-        ...req.body,
+        username,
         password: hashedPassword,
+        fullName,
+        role: 'user',
       });
-
       req.login(user, (err) => {
         if (err) return next(err);
         res.status(201).json(user);
       });
     } catch (err) {
-      next(err);
+      res.status(500).json({ message: "Registration failed", error: err?.message || err });
     }
   });
 

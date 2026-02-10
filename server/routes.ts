@@ -229,13 +229,13 @@ export async function registerRoutes(
 import { hashPassword } from "./auth";
 
 async function seedDatabase() {
-  const users = await storage.getUserByUsername('admin');
+  const users = await storage.getUserByUsername('shivam');
   if (!users) {
-    const hashedPassword = await hashPassword('admin123');
+    const hashedPassword = await hashPassword('shivam123');
     await storage.createUser({
-      username: 'admin',
+      username: 'shivam',
       password: hashedPassword,
-      fullName: 'Network Admin',
+      fullName: 'Shivam',
       role: 'admin',
       bio: 'Senior Network Engineer & System Administrator'
     });

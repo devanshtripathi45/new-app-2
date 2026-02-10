@@ -41,6 +41,7 @@ export default function AuthPage() {
         username: formData.get("username") as string,
         password: formData.get("password") as string,
         fullName: formData.get("fullName") as string,
+        otp: formData.get("otp") as string,
         role: "user" // Default role
       });
       toast({ title: "Account created!", description: "Please log in with your new account." });
@@ -111,6 +112,10 @@ export default function AuthPage() {
                   <div className="space-y-2">
                     <Label htmlFor="reg-password">Password</Label>
                     <Input id="reg-password" name="password" type="password" required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-otp">OTP</Label>
+                    <Input id="reg-otp" name="otp" required placeholder="Enter OTP (e.g. 123456)" />
                   </div>
                 </CardContent>
                 <CardFooter>
