@@ -78,7 +78,7 @@ export function setupAuth(app: Express) {
     try {
       const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
-        return res.status(400).send("Username already exists");
+        return res.status(400).json({ message: "Username already exists" });
       }
 
       const hashedPassword = await hashPassword(req.body.password);
@@ -102,7 +102,7 @@ export function setupAuth(app: Express) {
         return next(err);
       }
       if (!user) {
-        return res.status(401).send("Invalid username or password");
+        return res.status(401).json({ message: "Invalid username or password" });
       }
       req.logIn(user, (err) => {
         if (err) {
@@ -124,7 +124,7 @@ export function setupAuth(app: Express) {
     if (req.isAuthenticated()) {
       res.json(req.user);
     } else {
-      res.status(401).send("Not authenticated");
+      res.status(401).json({ message: "Not authenticated" });
     }
   });
 }
